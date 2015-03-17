@@ -13,6 +13,11 @@ public class SMSListener implements ISensor {
     private ContentResolver resolver;
     private Uri dbUri;
 
+    private static final String CONTACT = "contact";
+    private static final String TIME = "time";
+    private static final String LENGTH = "length";
+    private static final String INCOMING = "incoming";
+
     public SMSListener(Context context) {
         resolver = context.getContentResolver();
         dbUri = Uri.parse(DBAccessContract.DBACCESS_CONTENTPROVIDER + "smsmmsmeta");
@@ -25,7 +30,7 @@ public class SMSListener implements ISensor {
     }
 
     private void loadData() {
-        Cursor cursor = resolver.query(dbUri, new String[]{"MAX(time)"}, null, null, null);
+        Cursor cursor = resolver.query(dbUri, new String[]{"MAX(" + TIME + ")"}, null, null, null);
 
         long last = 0;
         if (cursor.moveToNext())
