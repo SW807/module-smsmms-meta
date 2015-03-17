@@ -3,6 +3,7 @@
     package="dk.aau.cs.psylog.smsmmsmeta" >
     <uses-permission android:name="dk.aau.cs.psylog.psylog.READ_DB"/>
     <uses-permission android:name="dk.aau.cs.psylog.psylog.WRITE_DB"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
