@@ -11,9 +11,11 @@ import dk.aau.cs.psylog.module_lib.ISensor;
 
 public class SMSListener implements ISensor {
     private ContentResolver resolver;
+    private Uri dbUri;
 
     public SMSListener(Context context) {
         resolver = context.getContentResolver();
+        dbUri = Uri.parse(DBAccessContract.DBACCESS_CONTENTPROVIDER + "smsmmsmeta");
     }
 
     public void startSensor() {
@@ -23,8 +25,7 @@ public class SMSListener implements ISensor {
     }
 
     private void loadData() {
-        Uri uri = Uri.parse(DBAccessContract.DBACCESS_CONTENTPROVIDER + "smsmmsmeta");
-        Cursor cursor = resolver.query(uri, new String[]{"MAX(time)"}, null, null, null);
+        Cursor cursor = resolver.query(dbUri, new String[]{"MAX(time)"}, null, null, null);
 
         long last = 0;
         if (cursor.moveToNext())
