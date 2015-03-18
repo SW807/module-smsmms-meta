@@ -44,14 +44,16 @@ public class SMSListener implements ISensor {
         if (cursor.moveToNext())
             last = cursor.getLong(0);
 
-        loadSms(last);
+        loadSmsInbox(last);
+        loadSmsSent(last);
         loadMms(last);
     }
 
-    private void loadSms(long lastdate) {
+    private void loadSmsInbox(long lastdate) {
         String dateFilter = Sms.Inbox.DATE + " > " + String.valueOf(lastdate);
-        String[] inboxCols = new String[]{Sms.Inbox.ADDRESS, Sms.Inbox.BODY, Sms.Inbox.DATE};
-        Cursor inbox = resolver.query(Sms.Inbox.CONTENT_URI, inboxCols, dateFilter, null, null);
+        String[] columns = new String[]{Sms.Inbox.ADDRESS, Sms.Inbox.BODY, Sms.Inbox.DATE};
+
+        Cursor inbox = resolver.query(Sms.Inbox.CONTENT_URI, columns, dateFilter, null, null);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
@@ -61,14 +63,18 @@ public class SMSListener implements ISensor {
             resolver.insert(dbUri, values);
         }
 
-        dateFilter = Sms.Inbox.DATE_SENT + " > " + String.valueOf(lastdate);
-        String[] sentCols = new String[]{Sms.Sent.ADDRESS, Sms.Sent.BODY, Sms.Sent.DATE_SENT};
-        Cursor outbox = resolver.query(Sms.Sent.CONTENT_URI, sentCols, dateFilter, null, null);
-        while (inbox.moveToNext()) {
+    }
+
+    private void loadSmsSent(long lastdate) {
+        String dateFilter = Sms.Inbox.DATE_SENT + " > " + String.valueOf(lastdate);
+        String[] columns = new String[]{Sms.Sent.ADDRESS, Sms.Sent.BODY, Sms.Sent.DATE_SENT};
+
+        Cursor sent = resolver.query(Sms.Sent.CONTENT_URI, columns, dateFilter, null, null);
+        while (sent.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(CONTACT, inbox.getString(0));
-            values.put(LENGTH, inbox.getString(1).length());
-            values.put(TIME, inbox.getLong(2));
+            values.put(CONTACT, sent.getString(0));
+            values.put(LENGTH, sent.getString(1).length());
+            values.put(TIME, sent.getLong(2));
             values.put(INCOMING, false);
             resolver.insert(dbUri, values);
         }
