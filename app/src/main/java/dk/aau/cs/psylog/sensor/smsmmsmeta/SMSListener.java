@@ -46,7 +46,8 @@ public class SMSListener implements ISensor {
 
         loadSmsInbox(last);
         loadSmsSent(last);
-        loadMms(last);
+        loadMmsInbox(last);
+        loadMmsSent(last);
     }
 
     private void loadSmsInbox(long lastdate) {
@@ -80,7 +81,34 @@ public class SMSListener implements ISensor {
         }
     }
 
-    private void loadMms(long lastdate) {
+    private void loadMmsInbox(long lastdate) {
+        String dateFilter = Mms.Inbox.DATE + " > " + String.valueOf(lastdate);
+        String[] inboxCols = new String[]{Mms.Addr.ADDRESS, Mms.Inbox.DATE, Mms.Inbox.MESSAGE_ID};
+
+        Cursor inbox = resolver.query(Mms.Inbox.CONTENT_URI, inboxCols, dateFilter, null, null);
+        while (inbox.moveToNext()) {
+            ContentValues values = new ContentValues();
+            values.put(CONTACT, inbox.getString(0));
+            values.put(LENGTH, getMmsLength(inbox.getLong(2)));
+            values.put(TIME, inbox.getLong(1));
+            values.put(INCOMING, true);
+            resolver.insert(dbUri, values);
+        }
+    }
+
+    private void loadMmsSent(long lastdate) {
+        String dateFilter = Mms.Sent.DATE_SENT + " > " + String.valueOf(lastdate);
+        String[] inboxCols = new String[]{Mms.Addr.ADDRESS, Mms.Sent.DATE_SENT, Mms.Sent.MESSAGE_ID};
+
+        Cursor inbox = resolver.query(Mms.Sent.CONTENT_URI, inboxCols, dateFilter, null, null);
+        while (inbox.moveToNext()) {
+            ContentValues values = new ContentValues();
+            values.put(CONTACT, inbox.getString(0));
+            values.put(LENGTH, getMmsLength(inbox.getLong(2)));
+            values.put(TIME, inbox.getLong(1));
+            values.put(INCOMING, false);
+            resolver.insert(dbUri, values);
+        }
     }
 
     private int getMmsLength(long mmsId) {
