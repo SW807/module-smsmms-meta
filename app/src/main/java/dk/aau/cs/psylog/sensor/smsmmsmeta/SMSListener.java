@@ -50,7 +50,6 @@ public class SMSListener implements ISensor {
 
     private void loadSms(long lastdate) {
         String dateFilter = Sms.Inbox.DATE + " > " + String.valueOf(lastdate);
-
         String[] inboxCols = new String[]{Sms.Inbox.ADDRESS, Sms.Inbox.BODY, Sms.Inbox.DATE};
         Cursor inbox = resolver.query(Sms.Inbox.CONTENT_URI, inboxCols, dateFilter, null, null);
         while (inbox.moveToNext()) {
@@ -62,7 +61,8 @@ public class SMSListener implements ISensor {
             resolver.insert(dbUri, values);
         }
 
-        String[] sentCols = new String[]{Sms.Inbox.ADDRESS, Sms.Inbox.BODY, Sms.Inbox.DATE_SENT};
+        dateFilter = Sms.Inbox.DATE_SENT + " > " + String.valueOf(lastdate);
+        String[] sentCols = new String[]{Sms.Sent.ADDRESS, Sms.Sent.BODY, Sms.Sent.DATE_SENT};
         Cursor outbox = resolver.query(Sms.Sent.CONTENT_URI, sentCols, dateFilter, null, null);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
