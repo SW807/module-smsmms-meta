@@ -25,10 +25,12 @@ public class SMSListener implements IScheduledTask {
     private static final String TIME = "time";
     private static final String LENGTH = "length";
     private static final String INCOMING = "incoming";
+    private static final String MODULE_NAME = "smsmmsdata";
+    private static final String TABLE_NAME = "smsmmsdata";
 
     public SMSListener(Context context) {
         resolver = context.getContentResolver();
-        dbUri = Uri.parse(DBAccessContract.DBACCESS_CONTENTPROVIDER + "smsmmsmeta");
+        dbUri = Uri.parse(DBAccessContract.DBACCESS_CONTENTPROVIDER + MODULE_NAME + "_" + TABLE_NAME);
     }
 
     private void loadData() {
