@@ -49,7 +49,7 @@ public class SMSListener implements IScheduledTask {
     private void loadSmsInbox(long lastdate) {
         String[] columns = new String[]{Sms.Inbox.ADDRESS, Sms.Inbox.BODY, Sms.Inbox.DATE};
 
-        Cursor inbox = getCursor(columns, lastdate);
+        Cursor inbox = getCursor(Sms.Inbox.CONTENT_URI, columns, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
@@ -61,14 +61,14 @@ public class SMSListener implements IScheduledTask {
 
     }
 
-    private Cursor getCursor(String[] columns, long lastdate){
-        return resolver.query(Sms.Inbox.CONTENT_URI, columns, Sms.Inbox.DATE + " > ?", new String[]{String.valueOf(lastdate)}, null);
+    private Cursor getCursor(Uri uri, String[] columns, long lastdate){
+        return resolver.query(uri, columns, Sms.Inbox.DATE + " > ?", new String[]{String.valueOf(lastdate)}, null);
     }
 
     private void loadSmsSent(long lastdate) {
         String[] columns = new String[]{Sms.Sent.ADDRESS, Sms.Sent.BODY, Sms.Sent.DATE_SENT};
 
-        Cursor sent = getCursor(columns, lastdate);
+        Cursor sent = getCursor(Sms.Sent.CONTENT_URI, columns, lastdate);
         while (sent.moveToNext()) {
             ContentValues values = new ContentValues();
             values.put(CONTACT, sent.getString(0));
@@ -82,7 +82,7 @@ public class SMSListener implements IScheduledTask {
     private void loadMmsInbox(long lastdate) {
         String[] columns = new String[]{Mms.Addr.ADDRESS, Mms.Inbox.DATE, Mms.Inbox.MESSAGE_ID};
 
-        Cursor inbox = getCursor(columns, lastdate);
+        Cursor inbox = getCursor(Mms.Inbox.CONTENT_URI, columns, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
@@ -96,7 +96,7 @@ public class SMSListener implements IScheduledTask {
     private void loadMmsSent(long lastdate) {
         String[] columns = new String[]{Mms.Addr.ADDRESS, Mms.Sent.DATE_SENT, Mms.Sent.MESSAGE_ID};
 
-        Cursor inbox = getCursor(columns, lastdate);
+        Cursor inbox = getCursor(Mms.Sent.CONTENT_URI, columns, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
