@@ -1,10 +1,13 @@
 package dk.aau.cs.psylog.sensor.smsmmsmeta;
 
-import dk.aau.cs.psylog.module_lib.SensorService;
+import dk.aau.cs.psylog.module_lib.ScheduledService;
 
-public class PsyLogService extends SensorService {
+public class PsyLogService extends ScheduledService {
+
+    public PsyLogService() {super("PsylogIntentServiceSMS/MMS");}
+
     @Override
-    public void setSensor() {
-        sensor = new SMSListener(this);
+    public void setScheduledTask() {
+        scheduledTask = new SMSListener(this);
     }
 }

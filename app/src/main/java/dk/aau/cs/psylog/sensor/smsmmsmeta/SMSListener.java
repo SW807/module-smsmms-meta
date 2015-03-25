@@ -15,9 +15,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import dk.aau.cs.psylog.module_lib.DBAccessContract;
-import dk.aau.cs.psylog.module_lib.ISensor;
+import dk.aau.cs.psylog.module_lib.IScheduledTask;
 
-public class SMSListener implements ISensor {
+public class SMSListener implements IScheduledTask {
     private ContentResolver resolver;
     private Uri dbUri;
 
@@ -29,12 +29,6 @@ public class SMSListener implements ISensor {
     public SMSListener(Context context) {
         resolver = context.getContentResolver();
         dbUri = Uri.parse(DBAccessContract.DBACCESS_CONTENTPROVIDER + "smsmmsmeta");
-    }
-
-    public void startSensor() {
-    }
-
-    public void stopSensor() {
     }
 
     private void loadData() {
@@ -166,6 +160,12 @@ public class SMSListener implements ISensor {
     }
 
     @Override
-    public void sensorParameters(Intent intent) {
+    public void doTask() {
+        loadData();
+    }
+
+    @Override
+    public void setParameters(Intent i) {
+
     }
 }
