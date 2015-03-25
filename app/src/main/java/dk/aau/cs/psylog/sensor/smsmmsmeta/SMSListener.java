@@ -22,7 +22,7 @@ public class SMSListener implements IScheduledTask {
     private Uri dbUri;
 
     private static final String CONTACT = "contact";
-    private static final String TIME = "time";
+    private static final String DATE = "date";
     private static final String LENGTH = "length";
     private static final String INCOMING = "incoming";
     private static final String MODULE_NAME = "smsmmsdata";
@@ -34,7 +34,7 @@ public class SMSListener implements IScheduledTask {
     }
 
     private void loadData() {
-        Cursor cursor = resolver.query(dbUri, new String[]{"MAX(" + TIME + ")"}, null, null, null);
+        Cursor cursor = resolver.query(dbUri, new String[]{"MAX(" + DATE + ")"}, null, null, null);
 
         long last = 0;
         if (cursor.moveToNext())
@@ -54,7 +54,7 @@ public class SMSListener implements IScheduledTask {
             ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
             values.put(LENGTH, inbox.getString(1).length());
-            values.put(TIME, inbox.getLong(2));
+            values.put(DATE, inbox.getLong(2));
             values.put(INCOMING, true);
             resolver.insert(dbUri, values);
         }
@@ -73,7 +73,7 @@ public class SMSListener implements IScheduledTask {
             ContentValues values = new ContentValues();
             values.put(CONTACT, sent.getString(0));
             values.put(LENGTH, sent.getString(1).length());
-            values.put(TIME, sent.getLong(2));
+            values.put(DATE, sent.getLong(2));
             values.put(INCOMING, false);
             resolver.insert(dbUri, values);
         }
@@ -87,7 +87,7 @@ public class SMSListener implements IScheduledTask {
             ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
             values.put(LENGTH, getMmsLength(inbox.getLong(2)));
-            values.put(TIME, inbox.getLong(1));
+            values.put(DATE, inbox.getLong(1));
             values.put(INCOMING, true);
             resolver.insert(dbUri, values);
         }
@@ -101,7 +101,7 @@ public class SMSListener implements IScheduledTask {
             ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
             values.put(LENGTH, getMmsLength(inbox.getLong(2)));
-            values.put(TIME, inbox.getLong(1));
+            values.put(DATE, inbox.getLong(1));
             values.put(INCOMING, false);
             resolver.insert(dbUri, values);
         }

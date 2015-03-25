@@ -6,7 +6,7 @@
 		"name": "smsmmsmeta",
 		"columns": [
 			{ "name": "contact", "dataType": "TEXT", "_unit": "phone number" },
-			{ "name": "time", "dataType": "INT", "_unit": "timestamp" },
+			{ "name": "date", "dataType": "REAL", "_unit": "timestamp" },
 			{ "name": "length", "dataType": "INT", "_unit": "characters" },
 			{ "name": "incoming", "dataType": "INT", "_unit": "true/false" }
 			]
