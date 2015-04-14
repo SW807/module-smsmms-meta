@@ -46,6 +46,10 @@ public class SMSListener implements IScheduledTask {
         loadMmsSent(last);
     }
 
+    private Cursor getCursor(Uri uri, String[] columns, String selectionColumn, long lastdate){
+        return resolver.query(uri, columns, selectionColumn + " > ?", new String[]{String.valueOf(lastdate)}, null);
+    }
+
     private void loadSmsInbox(long lastdate) {
         String[] columns = new String[]{Sms.Inbox.ADDRESS, Sms.Inbox.BODY, Sms.Inbox.DATE};
 
@@ -59,10 +63,6 @@ public class SMSListener implements IScheduledTask {
             resolver.insert(dbUri, values);
         }
 
-    }
-
-    private Cursor getCursor(Uri uri, String[] columns, String selectionColumn, long lastdate){
-        return resolver.query(uri, columns, selectionColumn + " > ?", new String[]{String.valueOf(lastdate)}, null);
     }
 
     private void loadSmsSent(long lastdate) {
