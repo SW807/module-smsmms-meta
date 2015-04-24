@@ -62,11 +62,10 @@ public class SMSListener implements IScheduledTask {
             values.put(INCOMING, true);
             resolver.insert(dbUri, values);
         }
-
     }
 
     private void loadSmsSent(long lastdate) {
-        String[] columns = new String[]{Sms.Sent.ADDRESS, Sms.Sent.BODY, Sms.Sent.DATE_SENT};
+        String[] columns = new String[]{Sms.Sent.ADDRESS, Sms.Sent.BODY, Sms.Sent.DATE};
 
         Cursor sent = getCursor(Sms.Sent.CONTENT_URI, columns, Sms.Sent.DATE, lastdate);
         while (sent.moveToNext()) {
