@@ -84,7 +84,7 @@ public class SMSListener implements IScheduledTask {
         Cursor inbox = getCursor(Mms.Inbox.CONTENT_URI, columns, Mms.Inbox.DATE, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(LENGTH, getMmsLength(inbox.getLong(1)));
+            values.put(LENGTH, getMmsLength(inbox.getString(1)));
             values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, true);
             resolver.insert(dbUri, values);
@@ -97,14 +97,14 @@ public class SMSListener implements IScheduledTask {
         Cursor inbox = getCursor(Mms.Sent.CONTENT_URI, columns, Mms.Sent.DATE, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(LENGTH, getMmsLength(inbox.getLong(1)));
+            values.put(LENGTH, getMmsLength(inbox.getString(1)));
             values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, false);
             resolver.insert(dbUri, values);
         }
     }
 
-    private int getMmsLength(long mmsId) {
+    private int getMmsLength(String mmsId) {
         String selectionPart = "mid=" + mmsId;
         Uri uri = Uri.parse("content://mms/part");
         Cursor cursor = resolver.query(uri, null,
