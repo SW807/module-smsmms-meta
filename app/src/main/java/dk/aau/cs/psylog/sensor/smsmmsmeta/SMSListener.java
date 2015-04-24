@@ -25,8 +25,8 @@ public class SMSListener implements IScheduledTask {
     private static final String DATE = "date";
     private static final String LENGTH = "length";
     private static final String INCOMING = "incoming";
-    private static final String MODULE_NAME = "smsmmsdata";
-    private static final String TABLE_NAME = "smsmmsdata";
+    private static final String MODULE_NAME = "smsmmsmeta";
+    private static final String TABLE_NAME = "smsmmsmeta";
 
     public SMSListener(Context context) {
         resolver = context.getContentResolver();
