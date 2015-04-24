@@ -28,6 +28,8 @@ public class SMSListener implements IScheduledTask {
     private static final String MODULE_NAME = "smsmmsmeta";
     private static final String TABLE_NAME = "smsmmsmeta";
 
+    private static final Uri PART_CONTENT_URI = Uri.withAppendedPath(Mms.CONTENT_URI, "part");
+
     public SMSListener(Context context) {
         resolver = context.getContentResolver();
         dbUri = Uri.parse(DBAccessContract.DBACCESS_CONTENTPROVIDER + MODULE_NAME + "_" + TABLE_NAME);
@@ -111,10 +113,7 @@ public class SMSListener implements IScheduledTask {
     }
 
     private int getMmsLength(String mmsId) {
-        String selectionPart = "mid=" + mmsId;
-        Uri uri = Uri.parse("content://mms/part");
-        Cursor cursor = resolver.query(uri, null,
-                selectionPart, null, null);
+        Cursor cursor = resolver.query(PART_CONTENT_URI, null, Part.MSG_ID + " = ?", new String[]{mmsId}, null);
 
         int length = 0;
 
@@ -138,7 +137,7 @@ public class SMSListener implements IScheduledTask {
     }
 
     private String getMmsText(String id) {
-        Uri partURI = Uri.parse("content://mms/part/" + id);
+        Uri partURI = Uri.withAppendedPath(PART_CONTENT_URI, id);
         InputStream is = null;
         StringBuilder sb = new StringBuilder();
         try {
