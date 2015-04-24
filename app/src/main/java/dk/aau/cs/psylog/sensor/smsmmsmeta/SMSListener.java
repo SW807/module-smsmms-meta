@@ -46,7 +46,7 @@ public class SMSListener implements IScheduledTask {
         loadMmsSent(last);
     }
 
-    private Cursor getCursor(Uri uri, String[] columns, String selectionColumn, long lastdate){
+    private Cursor getCursor(Uri uri, String[] columns, String selectionColumn, long lastdate) {
         return resolver.query(uri, columns, selectionColumn + " > ?", new String[]{String.valueOf(lastdate)}, null);
     }
 
@@ -79,28 +79,26 @@ public class SMSListener implements IScheduledTask {
     }
 
     private void loadMmsInbox(long lastdate) {
-        String[] columns = new String[]{Mms.Addr.ADDRESS, Mms.Inbox.DATE, Mms.Inbox.MESSAGE_ID};
+        String[] columns = new String[]{Mms.Inbox.DATE, Mms.Inbox._ID};
 
         Cursor inbox = getCursor(Mms.Inbox.CONTENT_URI, columns, Mms.Inbox.DATE, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(CONTACT, inbox.getString(0));
-            values.put(LENGTH, getMmsLength(inbox.getLong(2)));
-            values.put(DATE, inbox.getLong(1));
+            values.put(LENGTH, getMmsLength(inbox.getLong(1)));
+            values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, true);
             resolver.insert(dbUri, values);
         }
     }
 
     private void loadMmsSent(long lastdate) {
-        String[] columns = new String[]{Mms.Addr.ADDRESS, Mms.Sent.DATE_SENT, Mms.Sent.MESSAGE_ID};
+        String[] columns = new String[]{Mms.Sent.DATE, Mms.Sent._ID};
 
         Cursor inbox = getCursor(Mms.Sent.CONTENT_URI, columns, Mms.Sent.DATE, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(CONTACT, inbox.getString(0));
-            values.put(LENGTH, getMmsLength(inbox.getLong(2)));
-            values.put(DATE, inbox.getLong(1));
+            values.put(LENGTH, getMmsLength(inbox.getLong(1)));
+            values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, false);
             resolver.insert(dbUri, values);
         }
