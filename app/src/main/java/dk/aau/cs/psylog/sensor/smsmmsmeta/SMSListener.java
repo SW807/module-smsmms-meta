@@ -84,7 +84,10 @@ public class SMSListener implements IScheduledTask {
         Cursor inbox = getCursor(Mms.Inbox.CONTENT_URI, columns, Mms.Inbox.DATE, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(LENGTH, getMmsLength(inbox.getString(1)));
+            String id = inbox.getString(1);
+
+            values.put(CONTACT, getMmsContact(id));
+            values.put(LENGTH, getMmsLength(id));
             values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, true);
             resolver.insert(dbUri, values);
@@ -97,7 +100,10 @@ public class SMSListener implements IScheduledTask {
         Cursor inbox = getCursor(Mms.Sent.CONTENT_URI, columns, Mms.Sent.DATE, lastdate);
         while (inbox.moveToNext()) {
             ContentValues values = new ContentValues();
-            values.put(LENGTH, getMmsLength(inbox.getString(1)));
+            String id = inbox.getString(1);
+
+            values.put(CONTACT, getMmsContact(id));
+            values.put(LENGTH, getMmsLength(id));
             values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, false);
             resolver.insert(dbUri, values);
@@ -156,6 +162,10 @@ public class SMSListener implements IScheduledTask {
             }
         }
         return sb.toString();
+    }
+
+    private String getMmsContact(String messageId) {
+        return null;
     }
 
     @Override
