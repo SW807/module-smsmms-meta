@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Telephony.Sms;
 import android.provider.Telephony.Mms;
+import android.provider.Telephony.Mms.Part;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -113,22 +114,21 @@ public class SMSListener implements IScheduledTask {
     }
 
     private int getMmsLength(String mmsId) {
-        Cursor cursor = resolver.query(PART_CONTENT_URI, null, Part.MSG_ID + " = ?", new String[]{mmsId}, null);
+        String[] columns = new String[]{Part.MSG_ID, Part.CONTENT_TYPE, Part._DATA, Part.TEXT};
+        Cursor cursor = resolver.query(PART_CONTENT_URI, columns, Part.MSG_ID + " = ?", new String[]{mmsId}, null);
 
         int length = 0;
 
         if (cursor.moveToFirst()) {
             do {
-                String partId = cursor.getString(cursor.getColumnIndex("_id"));
-                String type = cursor.getString(cursor.getColumnIndex("ct"));
+                String partId = cursor.getString(0);
+                String type = cursor.getString(1);
                 if ("text/plain".equals(type)) {
-                    String data = cursor.getString(cursor.getColumnIndex("_data"));
-                    String body;
+                    String data = cursor.getString(2);
                     if (data != null)
-                        body = getMmsText(partId);
+                        length += getMmsText(partId).length();
                     else
-                        body = cursor.getString(cursor.getColumnIndex("text"));
-                    length += body.length();
+                        length += cursor.getString(3).length();
                 }
             } while (cursor.moveToNext());
         }
