@@ -121,14 +121,10 @@ public class SMSListener implements IScheduledTask {
 
         if (cursor.moveToFirst()) {
             do {
-                String partId = cursor.getString(0);
-                String type = cursor.getString(1);
-                if ("text/plain".equals(type)) {
+                if ("text/plain".equals(cursor.getString(1))) {
                     String data = cursor.getString(2);
-                    if (data != null)
-                        length += getMmsText(partId).length();
-                    else
-                        length += cursor.getString(3).length();
+                    if (data != null) length += getMmsTextLength(cursor.getString(0));
+                    else length += cursor.getString(3).length();
                 }
             } while (cursor.moveToNext());
         }
@@ -136,7 +132,7 @@ public class SMSListener implements IScheduledTask {
         return length;
     }
 
-    private String getMmsText(String id) {
+    private int getMmsTextLength(String id) {
         Uri partURI = Uri.withAppendedPath(PART_CONTENT_URI, id);
         InputStream is = null;
         StringBuilder sb = new StringBuilder();
@@ -160,7 +156,7 @@ public class SMSListener implements IScheduledTask {
                 }
             }
         }
-        return sb.toString();
+        return sb.length();
     }
 
     private String getMmsContact(String messageId) {
