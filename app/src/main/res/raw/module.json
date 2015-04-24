@@ -6,9 +6,9 @@
 		"name": "smsmmsmeta",
 		"columns": [
 			{ "name": "contact", "dataType": "TEXT", "_unit": "phone number" },
-			{ "name": "date", "dataType": "REAL", "_unit": "timestamp" },
-			{ "name": "length", "dataType": "INT", "_unit": "characters" },
-			{ "name": "incoming", "dataType": "INT", "_unit": "true/false" }
+			{ "name": "date", "dataType": "INTEGER", "_unit": "timestamp" },
+			{ "name": "length", "dataType": "INTEGER", "_unit": "number of characters" },
+			{ "name": "incoming", "dataType": "INTEGER", "_unit": "true/false" }
 			]
 		}
 	]
