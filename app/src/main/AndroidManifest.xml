@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dk.aau.cs.psylog.smsmmsmeta" >
-    <uses-permission android:name="dk.aau.cs.psylog.psylog.READ_DB"/>
-    <uses-permission android:name="dk.aau.cs.psylog.psylog.WRITE_DB"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
+
+    <uses-permission android:name="dk.aau.cs.psylog.psylog.READ_DB" />
+    <uses-permission android:name="dk.aau.cs.psylog.psylog.WRITE_DB" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <service
-            android:name="dk.aau.cs.psylog.smsmmsmeta.PsyLogService"
+            android:name="dk.aau.cs.psylog.sensor.smsmmsmeta.PsyLogService"
             android:enabled="true"
             android:exported="true" >
         </service>
