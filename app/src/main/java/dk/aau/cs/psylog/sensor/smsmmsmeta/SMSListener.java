@@ -9,11 +9,14 @@ import android.net.Uri;
 import android.provider.Telephony.Sms;
 import android.provider.Telephony.Mms;
 import android.provider.Telephony.Mms.Part;
+import android.provider.Telephony.Mms.Addr;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import dk.aau.cs.psylog.module_lib.DBAccessContract;
 import dk.aau.cs.psylog.module_lib.IScheduledTask;
@@ -159,8 +162,35 @@ public class SMSListener implements IScheduledTask {
         return sb.length();
     }
 
-    private String getMmsContact(long messageId) {
-        return null;
+    private String[] getMmsContact(long messageId, boolean incoming) {
+        String[] columns = new String[]{Addr.ADDRESS, Addr.TYPE};
+        Uri uri = Uri.withAppendedPath(Uri.withAppendedPath(Mms.CONTENT_URI, Long.toString(messageId)), "addr");
+        Cursor cursor = resolver.query(uri, columns, Addr.MSG_ID + " = ?", new String[]{Long.toString(messageId)}, null);
+
+        ArrayList<String> contacts = new ArrayList<String>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String adr = cursor.getString(0);
+                int type = cursor.getInt(1);
+                switch (type) {
+                    case 0x81://BCC
+                    case 0x82://CC
+                    case 0x89://FROM
+                        if (incoming)
+                            contacts.add(adr);
+                        break;
+                    case 0x97://TO
+                        if (!incoming)
+                            contacts.add(adr);
+                        break;
+                    default:
+                        Log.d("sensor.smsmms", "Unknown MMS address type: " + type);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        return contacts.toArray(new String[contacts.size()]);
     }
 
     @Override
