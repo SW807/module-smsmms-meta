@@ -92,11 +92,14 @@ public class SMSListener implements IScheduledTask {
             ContentValues values = new ContentValues();
             long id = inbox.getLong(1);
 
-            values.put(CONTACT, getMmsContact(id));
             values.put(LENGTH, getMmsLength(id));
             values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, true);
-            resolver.insert(dbUri, values);
+
+            for(String c : getMmsContacts(id, true)) {
+                values.put(CONTACT, c);
+                resolver.insert(dbUri, values);
+            }
         }
     }
 
@@ -108,11 +111,14 @@ public class SMSListener implements IScheduledTask {
             ContentValues values = new ContentValues();
             long id = inbox.getLong(1);
 
-            values.put(CONTACT, getMmsContact(id));
             values.put(LENGTH, getMmsLength(id));
             values.put(DATE, inbox.getLong(0));
             values.put(INCOMING, false);
-            resolver.insert(dbUri, values);
+
+            for(String c : getMmsContacts(id, false)) {
+                values.put(CONTACT, c);
+                resolver.insert(dbUri, values);
+            }
         }
     }
 
@@ -162,7 +168,7 @@ public class SMSListener implements IScheduledTask {
         return sb.length();
     }
 
-    private String[] getMmsContact(long messageId, boolean incoming) {
+    private String[] getMmsContacts(long messageId, boolean incoming) {
         String[] columns = new String[]{Addr.ADDRESS, Addr.TYPE};
         Uri uri = Uri.withAppendedPath(Uri.withAppendedPath(Mms.CONTENT_URI, Long.toString(messageId)), "addr");
         Cursor cursor = resolver.query(uri, columns, Addr.MSG_ID + " = ?", new String[]{Long.toString(messageId)}, null);
@@ -174,12 +180,12 @@ public class SMSListener implements IScheduledTask {
                 String adr = cursor.getString(0);
                 int type = cursor.getInt(1);
                 switch (type) {
-                    case 0x81://BCC
-                    case 0x82://CC
                     case 0x89://FROM
                         if (incoming)
                             contacts.add(adr);
                         break;
+                    case 0x81://BCC
+                    case 0x82://CC
                     case 0x97://TO
                         if (!incoming)
                             contacts.add(adr);
