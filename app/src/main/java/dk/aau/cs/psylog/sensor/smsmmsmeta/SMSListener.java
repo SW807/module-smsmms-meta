@@ -58,43 +58,46 @@ public class SMSListener implements IScheduledTask {
 
     private void loadSmsInbox(long lastdate) {
         String[] columns = new String[]{Sms.Inbox.ADDRESS, Sms.Inbox.BODY, Sms.Inbox.DATE};
-
         Cursor inbox = getCursor(Sms.Inbox.CONTENT_URI, columns, Sms.Inbox.DATE, lastdate);
+
+        ContentValues values = new ContentValues();
+        values.put(INCOMING, true);
+
         while (inbox.moveToNext()) {
-            ContentValues values = new ContentValues();
             values.put(CONTACT, inbox.getString(0));
             values.put(LENGTH, inbox.getString(1).length());
             values.put(DATE, inbox.getLong(2));
-            values.put(INCOMING, true);
             resolver.insert(dbUri, values);
         }
     }
 
     private void loadSmsSent(long lastdate) {
         String[] columns = new String[]{Sms.Sent.ADDRESS, Sms.Sent.BODY, Sms.Sent.DATE};
-
         Cursor sent = getCursor(Sms.Sent.CONTENT_URI, columns, Sms.Sent.DATE, lastdate);
+
+        ContentValues values = new ContentValues();
+        values.put(INCOMING, false);
+
         while (sent.moveToNext()) {
-            ContentValues values = new ContentValues();
             values.put(CONTACT, sent.getString(0));
             values.put(LENGTH, sent.getString(1).length());
             values.put(DATE, sent.getLong(2));
-            values.put(INCOMING, false);
             resolver.insert(dbUri, values);
         }
     }
 
     private void loadMmsInbox(long lastdate) {
         String[] columns = new String[]{Mms.Inbox.DATE, Mms.Inbox._ID};
-
         Cursor inbox = getCursor(Mms.Inbox.CONTENT_URI, columns, Mms.Inbox.DATE, lastdate);
+
+        ContentValues values = new ContentValues();
+        values.put(INCOMING, true);
+
         while (inbox.moveToNext()) {
-            ContentValues values = new ContentValues();
             long id = inbox.getLong(1);
 
             values.put(LENGTH, getMmsLength(id));
             values.put(DATE, inbox.getLong(0));
-            values.put(INCOMING, true);
 
             for(String c : getMmsContacts(id, true)) {
                 values.put(CONTACT, c);
@@ -105,15 +108,16 @@ public class SMSListener implements IScheduledTask {
 
     private void loadMmsSent(long lastdate) {
         String[] columns = new String[]{Mms.Sent.DATE, Mms.Sent._ID};
-
         Cursor inbox = getCursor(Mms.Sent.CONTENT_URI, columns, Mms.Sent.DATE, lastdate);
+
+        ContentValues values = new ContentValues();
+        values.put(INCOMING, false);
+        
         while (inbox.moveToNext()) {
-            ContentValues values = new ContentValues();
             long id = inbox.getLong(1);
 
             values.put(LENGTH, getMmsLength(id));
             values.put(DATE, inbox.getLong(0));
-            values.put(INCOMING, false);
 
             for(String c : getMmsContacts(id, false)) {
                 values.put(CONTACT, c);
