@@ -29,6 +29,8 @@ public class SMSListener implements IScheduledTask {
     private static final String DATE = "date";
     private static final String LENGTH = "length";
     private static final String INCOMING = "incoming";
+    private static final String MMS = "mms";
+
     private static final String MODULE_NAME = "smsmmsmeta";
     private static final String TABLE_NAME = "smsmmsmeta";
 
@@ -62,6 +64,7 @@ public class SMSListener implements IScheduledTask {
 
         ContentValues values = new ContentValues();
         values.put(INCOMING, true);
+        values.put(MMS, false);
 
         while (inbox.moveToNext()) {
             values.put(CONTACT, inbox.getString(0));
@@ -77,6 +80,7 @@ public class SMSListener implements IScheduledTask {
 
         ContentValues values = new ContentValues();
         values.put(INCOMING, false);
+        values.put(MMS, false);
 
         while (sent.moveToNext()) {
             values.put(CONTACT, sent.getString(0));
@@ -92,6 +96,7 @@ public class SMSListener implements IScheduledTask {
 
         ContentValues values = new ContentValues();
         values.put(INCOMING, true);
+        values.put(MMS, true);
 
         while (inbox.moveToNext()) {
             long id = inbox.getLong(1);
@@ -112,7 +117,8 @@ public class SMSListener implements IScheduledTask {
 
         ContentValues values = new ContentValues();
         values.put(INCOMING, false);
-        
+        values.put(MMS, true);
+
         while (inbox.moveToNext()) {
             long id = inbox.getLong(1);
 
