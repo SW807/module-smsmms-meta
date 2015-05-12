@@ -12,5 +12,9 @@
         { "name": "mms", "dataType": "INTEGER", "_unit": "boolean", "_info": "True if the message is an mms; otherwise false." }
       ]
     }
-  ]
+  ],
+  "task": {
+    "type": "scheduled",
+    "value": "03:00"
+  }
 }
