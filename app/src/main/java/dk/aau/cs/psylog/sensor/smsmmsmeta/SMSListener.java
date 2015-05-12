@@ -101,7 +101,7 @@ public class SMSListener implements IScheduledTask {
         while (inbox.moveToNext()) {
             long id = inbox.getLong(1);
 
-            values.put(LENGTH, getMmsLength(id));
+            values.put(CONTENT, getMmsContent(id));
             values.put(DATE, inbox.getLong(0));
 
             for(String c : getMmsContacts(id, true)) {
@@ -122,7 +122,7 @@ public class SMSListener implements IScheduledTask {
         while (inbox.moveToNext()) {
             long id = inbox.getLong(1);
 
-            values.put(LENGTH, getMmsLength(id));
+            values.put(CONTENT, getMmsContent(id));
             values.put(DATE, inbox.getLong(0));
 
             for(String c : getMmsContacts(id, false)) {
@@ -132,26 +132,26 @@ public class SMSListener implements IScheduledTask {
         }
     }
 
-    private int getMmsLength(long mmsId) {
+    private String getMmsContent(long mmsId) {
         String[] columns = new String[]{Part.MSG_ID, Part.CONTENT_TYPE, Part._DATA, Part.TEXT};
         Cursor cursor = resolver.query(PART_CONTENT_URI, columns, Part.MSG_ID + " = ?", new String[]{Long.toString(mmsId)}, null);
 
-        int length = 0;
+        StringBuilder sb = new StringBuilder();
 
         if (cursor.moveToFirst()) {
             do {
                 if ("text/plain".equals(cursor.getString(1))) {
                     String data = cursor.getString(2);
-                    if (data != null) length += getMmsTextLength(cursor.getLong(0));
-                    else length += cursor.getString(3).length();
+                    if (data != null) sb.append(getMmsPartText(cursor.getLong(0)));
+                    else sb.append(cursor.getString(3));
                 }
             } while (cursor.moveToNext());
         }
 
-        return length;
+        return sb.toString();
     }
 
-    private int getMmsTextLength(long id) {
+    private String getMmsPartText(long id) {
         Uri partURI = Uri.withAppendedPath(PART_CONTENT_URI, Long.toString(id));
         InputStream is = null;
         StringBuilder sb = new StringBuilder();
@@ -175,7 +175,7 @@ public class SMSListener implements IScheduledTask {
                 }
             }
         }
-        return sb.length();
+        return sb.toString();
     }
 
     private String[] getMmsContacts(long messageId, boolean incoming) {
