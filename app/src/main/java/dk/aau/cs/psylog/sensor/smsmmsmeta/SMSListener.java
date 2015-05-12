@@ -68,7 +68,7 @@ public class SMSListener implements IScheduledTask {
 
         while (inbox.moveToNext()) {
             values.put(CONTACT, inbox.getString(0));
-            values.put(LENGTH, inbox.getString(1).length());
+            values.put(CONTENT, inbox.getString(1));
             values.put(DATE, inbox.getLong(2));
             resolver.insert(dbUri, values);
         }
@@ -84,7 +84,7 @@ public class SMSListener implements IScheduledTask {
 
         while (sent.moveToNext()) {
             values.put(CONTACT, sent.getString(0));
-            values.put(LENGTH, sent.getString(1).length());
+            values.put(CONTENT, sent.getString(1));
             values.put(DATE, sent.getLong(2));
             resolver.insert(dbUri, values);
         }
