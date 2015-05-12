@@ -27,7 +27,7 @@ public class SMSListener implements IScheduledTask {
 
     private static final String CONTACT = "contact";
     private static final String DATE = "date";
-    private static final String LENGTH = "length";
+    private static final String CONTENT = "content";
     private static final String INCOMING = "incoming";
     private static final String MMS = "mms";
 

@@ -5,9 +5,9 @@
     {
       "name": "smsmmsmeta",
       "columns": [
-        { "name": "contact", "dataType": "TEXT", "_unit": "Caller number" },
-        { "name": "date", "dataType": "INTEGER", "_unit": "Timestamp" },
-        { "name": "length", "dataType": "INTEGER", "_unit": "Number of characters" },
+        { "name": "contact", "dataType": "TEXT", "_unit": "Contact number." },
+        { "name": "date", "dataType": "INTEGER", "_unit": "Timestamp." },
+        { "name": "content", "dataType": "TEXT", "_info": "The textual content of the message." },
         { "name": "incoming", "dataType": "INTEGER", "_unit": "boolean", "_info": "True if the message is in an inbox; otherwise false." },
         { "name": "mms", "dataType": "INTEGER", "_unit": "boolean", "_info": "True if the message is an mms; otherwise false." }
       ]
